@@ -188,7 +188,7 @@
 
     /* 4. === МОДУЛЬ АНГЛИЙСКИХ СЛОВ - ВСПЛЫВАЮЩИЕ ПОДСКАЗКИ ===*/
     /* источник http://makoveckij.ru/vsplyivayushhie-podskazki-na-css/#.V2BdSNKLS01 */
-    /* ----  0.1. ЗАГРУЖАЕМЫЙ для кода моноширинный ШРИФТ -------- */
+    /*  4.1.----  ЗАГРУЖАЕМЫЙ для ТРАНСКРИПЦИИ ШРИФТ -------- */
     @font-face {
       font-family: font-tr ; /* Имя шрифта phontm.ttf */
       /*src: url(../fonts/phontm.ttf);  Путь к файлу со шрифтом */
@@ -198,19 +198,40 @@
       position: relative; /* позиционирую РОДИТЕЛЯ для ::after ::befor (они будут потомками) */
       color: blue; /* временно, чтобы эти слова были видны в тексте */
     }
+
+		/* 4.2 --- ВСПЛЫВАЮЩАЯ ПОДСКАЗКА для ТРАНСКРИПЦИИ и ПЕРЕВОДА ------------------ */
     .tr:hover::after {
       content: attr(data-tr); /* подставляю в content содержимое атрибута */
 	    font-family: font-tr; /*подключаю свой шрифт, в котором есть знаки транскрипции */
-      font-weight: 500;
-      color: red;
-      background-color: antiquewhite;
-      /*bottom: 21px;  готовлю место для стрелки */
-      /* Позиционирование псевдоэлемента относительно родителя */
+			/* Позиционирование псевдоэлемента относительно родителя */
       position: absolute;
       left: 0; /* слева 0 от родителя */
       bottom: 20px; /* 20px выше слова */
       width: 200px; /* Ширина всплывающего блока */
-    }
+			/* Цветовое оформление всплывающей подсказки	*/
+			background-color: #1e2227;/* фоновый цвет */
+			background-image: linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)); /* градиент */
+			text-shadow: 0 1px 0 #000;
+			color: #fff;/* цвет шрифта */
+			border: 2px solid #ccc;/* я оставил старый - не так черно */
+			opacity: .9;/* прозрачность */
+			padding: 5px;/* отступы */
+  		border-radius: 5px;
+  	}
+
+		/* Добавляем стрелочку внизу блока всплывающей подсказки */
+		.tr:hover::before{
+    	border: solid;
+			/* border-color: #ccc transparent; Вариант - серая стрелка*/
+			border-color: #373B3F transparent; /* темно-синяя стрелка */
+    	border-width: 6px 6px 0 6px;/* делаем из рамки стрелку вниз */
+    	content: "";/* без контента */
+    	position: absolute;
+			bottom: 15px; /* Позиционирование стрелки снизу */
+    	left: 30%; /* Позиционирование стрелки слева */
+		}
+
+
   </style>
 </head>
 
@@ -304,10 +325,6 @@
   <script>
     $(document).ready(function() {
 
-			// ПРОБА ОБРАБОТКИ РАСЦВЕЧЕННОГО КОДА
-			alert($("div.selected").text());
-			// -- КОНЕЦ ПРОБЫ ----
-
       // Удаляю текст заголовка ОГЛАВЛЕНИЯ СТРАНИЦЫ.
       $('div.toc h4.work span:first-child').text(" ");
 
@@ -376,6 +393,7 @@
       }
       });// конец МОДУЛЬ англ. слов часть 1.
       */
+
   }); // КОНЕЦ $(document).ready(function() {})
   </script>
 <!--  <link rel="stylesheet" type="text/css" href="css/main.css">-->

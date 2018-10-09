@@ -255,6 +255,7 @@
     /*@media screen and (orientation: landscape) {.article {color: red;}}*/
   </style>
 </head>
+
 <body>
   <div class="cont-site">
     <!-- НАЧАЛО Контейнера сайта -->
@@ -334,8 +335,12 @@
   <script src="JSmain/jquery-3.3.1.min.js"></script>
   <script>
     $(document).ready(function() {
+
+			// ПРОБА ОБРАБОТКИ РАСЦВЕЧЕННОГО КОДА
+			alert($("div.selected").text());
+			// -- КОНЕЦ ПРОБЫ ----
+
       // Удаляю текст заголовка ОГЛАВЛЕНИЯ СТРАНИЦЫ.
-      //$('div.toc h4').text(" ");
       $('div.toc h4.work span:first-child').text(" ");
 
       // ============= НАЧАЛО УПРАВЛЕНИЕ ОГЛАВЛЕНИЕМ СТРАНИЦЫ ==============================

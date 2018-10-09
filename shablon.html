@@ -1,17 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <!-- SHABLON СТРАНИЦЫ.  Page Insight 99 / 100
-СДЕЛАНО:
-  - Каркас сайта.
-  - Управление САЙДБАРОМ.
-  - Оглавление страницы:
-    a) Выделение заголовка абзаца - с помощью :target
-    b) Управление оглавлением с помощью скрипта.
-    c) Иконка может быть:
-      либо треугольник CSS.
-      либо иконочный шрифт. В этом случае загружаются 2 файла и их подключение нужно делать
-        внизу страницы, ИНАЧЕ очень сильно падает рейтинг PSI (pageSpeed Insights).
-  -
+ФАЙЛ ОПИСАНИЯ D:\w10 КОНСПЕКТЫ_w7\ВЕРСТКА mobile шаблона КОНСПЕКТЫ
 -->
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -21,46 +11,29 @@
   <title>Шаблон страницы.</title>
 
   <style>
-    /* Краткий КОНСПЕКТ. НЕ наследуется:
-    - padding;
-    - box-sizing. Но мы сделаем наследование ВСЕХ элементов через inherit;
-    */
     /* 0. ====== Базовые стили для ВСЕГО сайта ======== */
     html {
-      /* ширина = content+border+padding. https://ymatuhin.ru/front-end/better_box_sizing/*/
-      box-sizing: border-box;
-      font-family: Helvetica, Arial, Verdana, sans-serif;
-      /* От размера в браузере */
-      font-size: 0.85em;
-      /* Межстрочный интервал */
-      line-height: 1.4;
-      /* Цвет приятный для глаз */
-      color: #585877;
+      box-sizing: border-box; /* ширина и высота = content+border+padding. */
+      font-family: Arial,"Helvetica CY", "Nimbus Sans L",  sans-serif;
+      font-size: 0.85em; /* От размера в браузере */
+      line-height: 1.4; /* Межстрочный интервал */
+      color: #585877; /* Цвет ТЕКСТА приятный для глаз */
     }
-
-    /* Теперь ВСЕ БУДУТ наследовать  box-sizing от родителя  */
-    *,
-    *:before,
-    *:after {
+    /* Источник:  https://ymatuhin.ru/front-end/better_box_sizing */
+    /* Теперь ВСЕ БУДУТ наследовать  box-sizing от родителя - от тэга html */
+    *, *:before, *:after {
       box-sizing: inherit;
     }
 
-    /* 1. === каркас сайта - НАЧАЛО */
-    /* Прижать к верху страницы обязательно для body - 0px */
-    body {
-      margin: 0px auto;
-    }
-
+    /* 1. ========== каркас сайта =================================== */
+    body {margin: 0px auto;}/* Прижать к верху страницы обязательно для body - 0px */
     /* Стили контейнера сайта */
     .cont-site {
-      /* Максимальная ширина ВСЕГО сайта */
-      max-width: 35cm;
-      justify-content: space-between;
+      max-width: 35cm; /* Максимальная ширина ВСЕГО сайта */
+      justify-content: space-between; /* Флексы равномерно распределяются по всей строке. Первый и последний элемент прижимаются к соответствующим краям контейнера. */
     }
-
     /* Стили Логотип */
     header {
-      /*Раньше class logo */
       padding: 1%;
       min-height: 40px;
       background-color: aquamarine;
@@ -71,75 +44,56 @@
       font-size: 20px;
       margin: 0 auto;
     }
-		.panel-for-site {
-			display: block;
-		}
 
-    /* СЕРЕДИНА САЙТА - sidebar (aside), article, ad - реклама */
+    /* 2. === СЕРЕДИНА САЙТА: sidebar(aside), article, ad - реклама ================ */
+    /*   2.1. ---- ГЛАВНЫЕ КОНТЕЙНЕРЫ СЕРЕДИНЫ САЙТА --------------------------  */
+    /* Контейнер для середины сайта */
     .main {
       margin: 0px auto;
       display: flex;
       border: 1px solid green;
     }
-
+    /* БОКОВАЯ ПАНЕЛЬ навигации */
     aside {
-      /*Раньше class sidebar */
       padding: 1%;
       background-color: #a2a2a2;
-      /*!!!!!!!! НЕ ТРОГАТЬ !!!!!!! ширина САЙДБАРА */
+      /*!!! НЕ ТРОГАТЬ !!! ширина САЙДБАРА - написал в 2016, сейчас не помню почему */
       width: 180px;
       min-width: 13%;
       overflow: hidden;
       transition: all 0.3s;
     }
-
+    /* ОСНОВНАЯ СТАТЬЯ сайта */
     article {
-      /*Раньше class article */
       padding: 1%;
-      /* ширина ОСНОВНОЙ ЧАСТИ */
       width: 61%;
     }
-
-     /*Раньше и сейчас class ad - реклама */
+     /* КОЛОНКА ДЛЯ РЕКЛАМЫ */
     .ad {
       padding: 1%;
       background-color: #e2e2e2;
-      /* ширина ОСНОВНОЙ ЧАСТИ */
-      width: 26%;
+      width: 26%; /* ширина ОСНОВНОЙ ЧАСТИ */
     }
-
+    /* ПОДВАЛ */
     footer {
       text-align: center;
       background-color: bisque;
     }
 
-    /* --- Стили раскрыающегося блока свернутого меню toc (table of content) --- */
+    /*  2.2. ----- ОГЛАВЛЕНИЕ СТРАНИЦЫ ----------------------------- */
     div.toc {
       cursor: pointer;
-      /*сдвигаем вправо + вынимаем из потока */
-      float: right;
-      /* Оглавление страницы станет прилипющим к верху*/
-      position: sticky;
-      /* Относится к position: sticky - Верхний край оглавления ниже родительского блока */
-      top: 25px;
-      /* Ширина свернутого Оглавления */
-      width: 50px;
-      /* Текст в Оглавлении по центру */
-      text-align: center;
-      /* Цвет текста в Оглавлении */
-/*      color: red;*/
-      /*поля */
-      margin: 2px 2px;
-      /* рамка блока */
-      border: 1px solid #bbb;
-      /* Цвет ФОНА свернутого меню */
-      background-color: rgba(246, 246, 246, 0.3);
-      /* ВНУТРЕННЯЯ ТЕНЬ для всех  браузеров кроме ИЕ8 и опера-мини*/
-      box-shadow: inset 0 0 10px #BABABA;
-      /* радиус углов */
-      border-radius: 5px;
+      float: right; /*сдвигаем вправо + вынимаем из потока */
+      position: sticky; /* Оглавление страницы станет прилипющим к верху*/
+      top: 25px; /* Относится к position: sticky - Верхний край ниже родительского блока */
+      width: 50px; /* Ширина свернутого Оглавления */
+      margin: 2px 2px; /*поля */
+      border: 1px solid #bbb; /* рамка блока */
+      background-color: rgba(246, 246, 246, 0.3);  /* Цвет ФОНА свернутого меню */
+      box-shadow: inset 0 0 10px #BABABA;  /* ВНУТРЕННЯЯ ТЕНЬ для всех  браузеров кроме ИЕ8 и опера-мини*/
+      border-radius: 5px;  /* радиус углов */
     }
-		/* Стиль заголовка Оглавлени */
+    /* Стиль ЗАГОЛОВКА Оглавления страницы */
     div.toc h4.work {
       color: blue;
       box-sizing: content-box;
@@ -148,111 +102,115 @@
       cursor: pointer;
       justify-content:flex-end;
     }
-
-    /* Стиль треугольника */
-    .tr {
+    /* Стиль CSS-треугольника */
+    .trCSS {
       margin: 5px;
-      /* Отодвигаю левый соседний блок  */
-      margin-left: 20px;
+      margin-left: 20px; /* Отодвигаю левый соседний блок  */
       border-top: 10px solid blue;
       border-left: 10px solid transparent;
     }
-
-    /* Стили списка в Оиглвлени */
+    /* Стили СПИСКА в Оиглвлении страницы */
     div.toc ol {
       display: none;
       margin: 1px;
       margin-left: 20px;
       padding: 1px;
     }
-    /* Стили пункта списка в Оиглвлени */
+    /* Стили пункта списка в Оиглвлении страницы */
     div.toc li {
       text-align: left;
       margin: 1px;
       padding: 1px;
       padding-left: 1px;
     }
-
+    /* ВЫДЕЛЕНИЕ выбранного пункта Оглавления страницы */
     .selected {
-/*      color: blue;*/
-      /*  рамка блока */
-      border: 1px solid #bbb;
-      background-color: rgba(246, 246, 246, 1.0);
-      /*Цвет ФОНА свернутого меню */
-      /*ВНУТРЕННЯЯ ТЕНЬ для всех  браузеров кроме ИЕ8 и опера-мини */
-      box-shadow: inset 0 0 10px #BABABA;
-      /*радиус углов  */
-      border-radius: 5px;
-    }
 
-    /* Стили ССЫЛОК в меню */
+      border: 1px solid #bbb;  /*  рамка блока */
+      background-color: rgba(246, 246, 246, 1.0); /*Цвет ФОНА свернутого меню */
+      box-shadow: inset 0 0 10px #BABABA; /*ВНУТРЕННЯЯ ТЕНЬ для всех  браузеров кроме ИЕ8 и опера-мини */
+      border-radius: 5px;  /*радиус углов  */
+    }
+    /* Стили ССЫЛОК в Оглавления страницы */
     .toc ol li a {
-      /* делаю цвет посещенной ссылки обычным для сайта */
       text-decoration: none;
-      color: #585877;
+      color: #585877;  /* делаю цвет ссылки обычным для сайта */
       display: block;
     }
-     /* убираю подчеркивание */
     .toc ol li a:visited {
-      text-decoration: none;
+      text-decoration: none; /* убираю подчеркивание ПОСЕЩЕННЫХ ССЫЛОК */
     }
 
-    .toc_h:target {
-      color: blue;
-      /*  рамка блока */
-      border: 1px solid #bbb;
-      /*Цвет ФОНА свернутого меню */
-      background-color: rgba(246, 246, 246, 1);
-      /*ВНУТРЕННЯЯ ТЕНЬ для всех  браузеров кроме ИЕ8 и опера-мини */
-      box-shadow: inset 0 0 10px #BABABA;
-      /* радиус углов */
-      border-radius: 5px;
-    }
-
-    /* Стили заголовка параграфа */
+    /*  2.3. -----  ПАРАГРАФЫ СТАТЬИ ------------------------------ */
+    /* ЗАГОЛОВОК ПАРАГРАФА СТАТЬИ */
     .toc_h {
       text-align: center;
       font-weight: bold;
       margin-top: 5px;
       margin-bottom: 3px;
     }
-
-    /* Стили параграфа */
+    /* выбранный ЗАГОЛОВОК ПАРАГРАФА СТАТЬИ */
+    .toc_h:target {
+      color: blue;
+      border: 1px solid #bbb;  /*  рамка блока */
+      background-color: rgba(246, 246, 246, 1);  /*Цвет ФОНА свернутого меню */
+      box-shadow: inset 0 0 10px #BABABA;  /*ВНУТРЕННЯЯ ТЕНЬ для всех  браузеров кроме ИЕ8 и опера-мини */
+      border-radius: 5px;  /* радиус углов */
+    }
+    /* ПАРАГРАФ СТАТЬИ */
     .toc_p {
       text-align: justify;
       margin-top: 2px;
       margin-bottom: 2px;
     }
 
-    /* ===== МЕДИА ПРАВИЛА =================	*/
+    /* 3. ===== МЕДИА ПРАВИЛА ДЛЯ РАЗНЫХ РАЗМЕРОВ ЭКРАНОВ =================	*/
+    /*  3.1. ---- ШИРИНА ЭКРАНА < 30cm --- */
     @media only screen and (max-width: 30cm) {
       .ad {display: none;} /* удаляем рекламную колонку */
       aside {width: 20%;}
       article {width: 80%;}
     }
+    /*  3.2. ---- ШИРИНА ЭКРАНА < 25cm --- */
     @media only screen and (max-width: 25cm) {
-      /*.model-inputs div label {font-size: 1.4rem;}  увеличиваем текст в label инпута */
     }
-    /* Для маленьких экранов кнопки ДАЛЬШЕ друг от друга - НАЙДЕНО ОПЫТНЫМ ПУТЕМ в PageSpeedInsights
-    - НЕ ПЕРЕМЕЩАТЬ во внешний файл - сразу снижается с 99% до 91%*/
+    /*  3.3. ---- ШИРИНА ЭКРАНА < 20cm --- */
     @media only screen and (max-width: 20cm) {
-      /*  оставляем только 1-у колонку */
+      /*  оставляем только 1-у колонку и делаем ее ширину 100% */
       .ad {display: none;}
       aside {display: none;}
       article {width: 100%;}
-		header div label:nth-child(n+2) {display: none;}
-      /* удаляем flex и делаем ширину инпутов и кода 100% */
 
-      /* Увеличиваем высоту ссылок в ОГЛАВЛЕНИИ (размер активных элементов)	*/
-      .toc ol li  {margin-bottom: 3px;}
-      .toc ol li a {
-        font-size: 100%;
-        /*		padding-bottom: 16px; НЕ ИСПОЛЬЗОВАТЬ - не помогает увеличению активных элементов */
-      }
+      header div label:nth-child(n+2) {display: none;} /* убираю панель управленя САЙДБАРА */
+      .toc ol li  {margin-bottom: 3px;}  /* Увеличиваем высоту ссылок в ОГЛАВЛЕНИИ */
+      .toc ol li a {font-size: 100%;}
     }
-    @media only screen and (max-width: 20cm) {
+
+    /* 4. === МОДУЛЬ АНГЛИЙСКИХ СЛОВ - ВСПЛЫВАЮЩИЕ ПОДСКАЗКИ ===*/
+    /* источник http://makoveckij.ru/vsplyivayushhie-podskazki-na-css/#.V2BdSNKLS01 */
+    /* ----  0.1. ЗАГРУЖАЕМЫЙ для кода моноширинный ШРИФТ -------- */
+    @font-face {
+      font-family: font-tr ; /* Имя шрифта phontm.ttf */
+      /*src: url(../fonts/phontm.ttf);  Путь к файлу со шрифтом */
+      /*src: url(../fonts/UbuntuMono-R-my-change-3.ttf);   Путь к файлу со шрифтом */
     }
-    /*@media screen and (orientation: landscape) {.article {color: red;}}*/
+    .tr{
+      position: relative; /* позиционирую РОДИТЕЛЯ для ::after ::befor (они будут потомками) */
+      color: blue; /* временно, чтобы эти слова были видны в тексте */
+    }
+    .tr:hover::after {
+      content: attr(data-tr); /* подставляю в content содержимое атрибута */
+	    font-family: font-tr; /*подключаю свой шрифт, в котором есть знаки транскрипции */
+      font-weight: 500;
+      color: red;
+      background-color: antiquewhite;
+      /*bottom: 21px;  готовлю место для стрелки */
+      /* Позиционирование псевдоэлемента относительно родителя */
+      position: absolute;
+      left: 0; /* слева 0 от родителя */
+      bottom: 20px; /* 20px выше слова */
+      width: 200px; /* Ширина всплывающего блока */
+    }
   </style>
 </head>
 
@@ -288,7 +246,7 @@
           <!--  Оглавление страницы - прозрачное -->
           <h4 class="work">
             <span>.</span> <!-- Текст управляется скриптом -->
-            <span class="tr"></span>
+            <span class="trCSS"></span>
           </h4>
           <ol>
             <li><a href="#toc_1">Введение.</a></li>
@@ -301,7 +259,17 @@
         </div>
         <h4 class='toc_h' id="toc_1">1. Введение.</h4>
         <p class="toc_p">
-          Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых
+          <!-- Английские слова для проверки работы модуля -->
+          <br> проверочные слова
+          <br><span class="tr" data-tr="i: ı e æ ɑ: ɒ  ɔ: ɜ: ə ʌ ʊ u: aı eı ɔı aʊ əʊ ıə ʊə eə p t b d m n k l g f v s z ʃ ʒ dʒ r h j ju: je jɔ jʌ w ŋ θ ð">attachment - </span>
+          <br><span class="tr" data-tr="[ˈɔrɪʤɪn] - выравнивание этого слова">origin - </span>
+          <br><a href="search.html" class="tr">repeat - </a>
+
+          <span class="tr" data-tr=""> Attention</span>
+          <span class="tr" data-tr="">size</span>
+          <span class="tr" data-tr="">table</span>
+
+          Lorem Ipsum - это текст-"рыба", часто используемый <span class="tr" data-tr="[rɪˈpiːt] - выравнивание этого слова"> display - </span> в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых
         </p>
         <h4 class='toc_h' id="toc_2">2.Пример.</h4>
         <p class="toc_p">
@@ -343,25 +311,21 @@
       // Удаляю текст заголовка ОГЛАВЛЕНИЯ СТРАНИЦЫ.
       $('div.toc h4.work span:first-child').text(" ");
 
-      // ============= НАЧАЛО УПРАВЛЕНИЕ ОГЛАВЛЕНИЕМ СТРАНИЦЫ ==============================
-      var hash = window.location.hash;
-      /* Получаем hash адресной строки - в конце строки #... (типа #toc_3):
-      - Если нет хэша, то в var hash будет пустая строка - проверял - сделать проверку что есть # в строке.
-      - Если будет что-то, но не хэш (убрал #) - в live Preview сообщение Cannot GET /tocJS.htmltoc_3
-      В реальном браузере  ошибка 404 - файл не найден.
-      */
+      // 1. === УПРАВЛЕНИЕ ОГЛАВЛЕНИЕМ СТРАНИЦЫ ==============================
+      var hash = window.location.hash; /* Получаем hash адресной строки (например, #toc_3) */
+      // Если первым элементом хэша будет знак # , то:
       if (hash.search(/#/) == 0) {
-        /*Если первый элемент хэша знак # (начинается с 0) , то:
-        - У ВСЕХ li удаляем  класс selected.
-        - Находим родителя ссылки с атрибутом href равным хэшу и его РОДИТЕЛЮ присваиваем класс.
-        */
+        // - У ВСЕХ li удаляем  класс selected.
+        // - Находим родителя ссылки с атрибутом href равным хэшу и его РОДИТЕЛЮ присваиваем класс. Если такого нет, то выделения просто не будет
         $('div.toc ol li').removeClass('selected');
         $('[href="' + hash + '"]').parent().attr("class", "selected");
       }
-      // Обрабатываем клик по свернутому Оглавлению (h4).
-      $('div.toc h4').click(function() {
+      /* ВАЖНО: здесь обрабатываются разные клики:
+        - клик по заголовку Оглавления
+        - клик по пункту Оглавления.
+      */
+      $('div.toc h4').click(function() { // Клик по ЗАГОЛОВКУ Оглавления.
         var el = $(this);
-//        alert(el.prop("tagName") + " ширина: " + el.width());
         if (el.width() < 50) {
           el.parent().css({
             "width": "250",
@@ -369,8 +333,7 @@
           });
           $('.toc ol').css("display", "block");
           $('div.toc h4.work span:first-child').text("Оглавление страницы:");
-        }
-        else if ($(this).width() > 50) {
+        } else if ($(this).width() > 50) {
           $('div.toc h4.work span:first-child').text("");
           el.parent().css({
             "width": "50",
@@ -379,7 +342,7 @@
           $('.toc ol').css("display", "none");
         }
       });
-      // Обрабатываем клик по пунку Оглавления.
+      // Обрабатываем клик по ПУНКТУ Оглавления.
       $('div.toc ol li').click(function() {
         $('div.toc ol li').removeClass('selected'); // У ВСЕХ li удаляем класс
         $(this).addClass('selected');
@@ -391,15 +354,31 @@
         });
       }); // ====== КОНЕЦ управление оглавлением страницы =======
 
-      // ==== смена позиции sidebar с помощью JS. ==================================
-      $('[name = sd-place]').click(function(){
+      // 2. ==== смена позиции sidebar с помощью JS. ==================================
+      $('[name = sd-place]').click(function() {
         var a = $(this).attr('id');
-        if(a == 'left') $('.main').css('flex-direction', 'row');
-        else if(a == 'right') $('.main').css('flex-direction', 'row-reverse');
-        //alert(a);
+        if (a == 'left') $('.main').css('flex-direction', 'row');
+        else if (a == 'right') $('.main').css('flex-direction', 'row-reverse');
       });
-    });
+
+      // 3. ==== МОДУЛЬ АНГЛИЙСКИХ СЛОВ ==============================
+      // 3.1. - создаем JS-МАССИВ всех англ. слов, имеющих class = 'tr' - translation
+      /*
+      var engWords = [];// создаю массив английских слов находящихся на странице
+      var word; // Переменная для записи перебираемых в цикле английских слов
+      $('.tp').each(function(indx, elem){ // Получаем ВСЕ слова с классом tp
+      word = $(elem).text().toLowerCase() ; // записываем английское слово в нижнем регистре в переменную
+      word =$.trim(word);//удаляем возможные пробелы слева и справа
+      // alert('='+word+'-');
+      // заполняем массив англ. словами, которых нет еще в массиве
+      if(engWords.indexOf(word) == -1) { // если в массиве нет этого слова
+      engWords.push(word);// то добавляем в него новое слово
+      }
+      });// конец МОДУЛЬ англ. слов часть 1.
+      */
+  }); // КОНЕЦ $(document).ready(function() {})
   </script>
+<!--  <link rel="stylesheet" type="text/css" href="css/main.css">-->
 </body>
 </html>
 

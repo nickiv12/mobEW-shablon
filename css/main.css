@@ -1,0 +1,54 @@
+/* 1.====  МОДУЛЬ ПЕРЕВОДА АНГЛИЙСКИХ СЛОВ ===== */
+/*  1.1. ----  Загружаемы  ШРИФТ Транскрипций.   -------- */
+@font-face {
+  font-family: font-tr ; /* Имя шрифта phontm.ttf */
+  src: url(../fonts/phontm.ttf);  /*Путь к файлу со шрифтом */
+}
+.tr {
+/*  font-family: font-tr;*/
+  /*
+  font-style: italic;
+  font-weight: bold;
+  color: brown;
+  */
+}
+.tr:hover {cursor: help;}/* тип курсора при наведении */
+/* появляющаяся подсказка	*/
+.tr:hover::after{
+  content: "Привет";
+  /*content: attr(data-tr); подставляю в content содержимое атрибута */
+	/* font-family: font-family: font-tr;подключаю свой шрифт, в котором есть знаки транскрипции */
+	font-size: 1.2rem;/* надо задать размер, иначе наследует от родителя и будет разный размер у разных элементов */
+	text-align: left;/* выравниваю текст влево*/
+	text-indent: 0;/* надо обязательноу указать, иначе будет отступ у первой строки, а вторая строка будет выступать слева */
+
+	/* темно-синий вариант	*/
+	color: #fff;/* цвет шрифта */
+	border: 2px solid #ccc;/* я оставил старый - не так черно */
+  opacity: .9;/* прозрачность */
+	background-color: #1e2227;/* фоновый цвет */
+  background-image: linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)); /* градиент */
+	text-shadow: 0 1px 0 #000;
+  opacity: .9;/* прозрачность */
+
+	padding: 5px;/* отступы */
+  border-radius: 5px;
+
+	/* позиционировани всплывающей подсказки	*/
+  position: absolute;
+  width: 300px;
+  bottom: 21px;
+  left: 0;/* позиционируем от начала слова */
+  z-index: 98;/* z-index не работает, НАВЕРНО аfter перекрывает before */
+}
+.tr:hover::before{ /* Добавляем стрелочку внизу блока всплывающей подсказки */
+    border: solid;
+   border-color: #ccc transparent; /* серая стрелка*/
+   border-color: #373B3F transparent; /* темно-синяя стрелка */
+    border-width: 6px 6px 0 6px;/* делаем из рамки стрелку вниз */
+    bottom: 15px;
+    content: "";/* без контента */
+    position: absolute;
+    left: 50%;
+    z-index: 99;/* z-index не работает, НАВЕРНО аfter перекрывает before */
+}

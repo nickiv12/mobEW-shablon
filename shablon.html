@@ -190,7 +190,7 @@
     /* источник http://makoveckij.ru/vsplyivayushhie-podskazki-na-css/#.V2BdSNKLS01 */
     /*  4.1.----  ЗАГРУЖАЕМЫЙ для ТРАНСКРИПЦИИ ШРИФТ -------- */
     @font-face {
-      font-family: font-tr ; /* Имя шрифта phontm.ttf */
+      /* font-family: font-tr ; Имя шрифта phontm.ttf */
       /*src: url(../fonts/phontm.ttf);  Путь к файлу со шрифтом */
       /*src: url(../fonts/UbuntuMono-R-my-change-3.ttf);   Путь к файлу со шрифтом */
     }
@@ -282,9 +282,9 @@
         <p class="toc_p">
           <!-- Английские слова для проверки работы модуля -->
           <br> проверочные слова
-          <br><span class="tr" data-tr="i: ı e æ ɑ: ɒ  ɔ: ɜ: ə ʌ ʊ u: aı eı ɔı aʊ əʊ ıə ʊə eə p t b d m n k l g f v s z ʃ ʒ dʒ r h j ju: je jɔ jʌ w ŋ θ ð">attachment - </span>
-          <br><span class="tr" data-tr="[ˈɔrɪʤɪn] - выравнивание этого слова">origin - </span>
-          <br><a href="search.html" class="tr">repeat - </a>
+          <br><span class="tr" data-tr="i: ı e æ ɑ: ɒ  ɔ: ɜ: ə ʌ ʊ u: aı eı ɔı aʊ əʊ ıə ʊə eə p t b d m n k l g f v s z ʃ ʒ dʒ r h j ju: je jɔ jʌ w ŋ θ ð">Все звуки транскрипции</span>
+          <br><span class="tr" data-tr="">origin</span>
+          <br><a href="search.html" class="tr">repeat</a>
 
           <span class="tr" data-tr=""> Attention</span>
           <span class="tr" data-tr="">size</span>
@@ -312,6 +312,23 @@
         <p class="toc_p">
           Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых используется Lorem Ipsum.
         </p>
+
+				<!-- МЕСТО ДЛЯ ВСТАВКИ СКРИПТА СО СЛОВАРЕМ пришедшим с сервера ПОСЛЕ AJAX. Тэг р с идентификатором нужен, чтобы знать где скрипт будет вставлен  -->
+				<p id="for-script">
+					<script>
+					// ВРЕМЕННО делаю работу по созданию объекта словаря сам.
+						var dictionary = {};// создаю объект словаря
+						dictionary["origin"] = ["[ˈɔrɪʤɪn]", "первоисточник"];
+						dictionary["repeat"] = ["[rɪˈpiːt]", "повторять"];
+						dictionary["attention"] = ["[əˈtenʃn]", "внимание"];
+						dictionary["size"] = ["[saɪz]", "размер"];
+						dictionary["table"] = ["[teɪbl]", "таблица"];
+						dictionary["display"] = ["[dɪsˈpleɪ]]", "отображение"];
+
+
+					</script>
+				</p>
+
       </article> <!-- КОНЕЦ СТАТЬИ -->
 
       <div class="ad">
@@ -324,6 +341,23 @@
   <script src="JSmain/jquery-3.3.1.min.js"></script>
   <script>
     $(document).ready(function() {
+
+			// 0. ---- ВРЕМЕННО ЗДЕСЬ МОДУЛЬ АНГЛ. СЛОВ ------
+			// Подставление перевода в атрибут data-translate для показа всплывающих подсказок.
+			var addToDictionary = []; //создаем массив для добавления в словарь (слов не нашедших перевод)
+			var word1;
+			$('.tr').each(function(indx, elem){
+				word1 = $.trim( $(elem).text().toLowerCase()); // Удаvяет символы пробелов, табов и переносов строк И записываем английское слово в нижнем регистре в переменную
+				if(word1 in dictionary) {
+					$(elem).attr('data-tr',dictionary[word1][0]+' - '+dictionary[word1][1]);
+					alert(word1+' in dic');
+				} // ИНАЧЕ создаем массив отсутствующих переводов слов и отправляем их на сервер noWordTranslate(word);
+				else {
+					addToDictionary.push(word1);
+					alert(word1+' NOT in dic');
+				}
+			});
+			// конец временного кода
 
       // Удаляю текст заголовка ОГЛАВЛЕНИЯ СТРАНИЦЫ.
       $('div.toc h4.work span:first-child').text(" ");

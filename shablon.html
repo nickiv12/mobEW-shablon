@@ -218,6 +218,7 @@
 			padding: 5px;/* отступы */
   		border-radius: 5px;
   	}
+		.tr-left:hover::after {left: -150px;} /* Если у правого края */
 
 		/* Добавляем стрелочку внизу блока всплывающей подсказки */
 		.tr:hover::before{
@@ -230,6 +231,12 @@
 			bottom: 15px; /* Позиционирование стрелки снизу */
     	left: 30%; /* Позиционирование стрелки слева */
 		}
+		/* управляем ОКЛЮЧЕНИЕМ ПОКАЗА перевода */
+		.no-tr {color: #585877;} /* Делаем цвет текста обычным */
+		.no-tr:hover:after {visibility: hidden;}
+		.no-tr:hover:before {visibility: hidden;}
+		.no-tr:hover {cursor: auto;}
+		/* --- КОНЕЦ всплывающей подсказки ТРАНСКРИПЦИИ И ПЕРЕВОДА  ------------------
 
 
   </style>
@@ -242,7 +249,7 @@
       <h1>ЛОГОТИП</h1>
       <div class="selected">
         <label>
-          <input type="checkbox" id="tip" checked="checked">Перевод слов.</label>
+          <input type="checkbox" id="tir" checked="checked">Перевод слов.</label>
         <br>
         <label>
           <input type="radio" name='sd-place' id="left" checked="checked">слева  &lt;&lt; SIDEBAR &gt;&gt;
@@ -284,6 +291,7 @@
           <br> проверочные слова
           <br><span class="tr" data-tr="i: ı e æ ɑ: ɒ  ɔ: ɜ: ə ʌ ʊ u: aı eı ɔı aʊ əʊ ıə ʊə eə p t b d m n k l g f v s z ʃ ʒ dʒ r h j ju: je jɔ jʌ w ŋ θ ð">Все звуки транскрипции</span>
           <br><span class="tr" data-tr="">origin</span>
+					<!-- класс можно задать любому html-элементу и перевод будет работать, например ссылке  -->
           <br><a href="search.html" class="tr">repeat</a>
 
           <span class="tr" data-tr=""> Attention</span>
@@ -324,8 +332,6 @@
 						dictionary["size"] = ["[saɪz]", "размер"];
 						dictionary["table"] = ["[teɪbl]", "таблица"];
 						dictionary["display"] = ["[dɪsˈpleɪ]]", "отображение"];
-
-
 					</script>
 				</p>
 
@@ -341,23 +347,6 @@
   <script src="JSmain/jquery-3.3.1.min.js"></script>
   <script>
     $(document).ready(function() {
-
-			// 0. ---- ВРЕМЕННО ЗДЕСЬ МОДУЛЬ АНГЛ. СЛОВ ------
-			// Подставление перевода в атрибут data-translate для показа всплывающих подсказок.
-			var addToDictionary = []; //создаем массив для добавления в словарь (слов не нашедших перевод)
-			var word1;
-			$('.tr').each(function(indx, elem){
-				word1 = $.trim( $(elem).text().toLowerCase()); // Удаvяет символы пробелов, табов и переносов строк И записываем английское слово в нижнем регистре в переменную
-				if(word1 in dictionary) {
-					$(elem).attr('data-tr',dictionary[word1][0]+' - '+dictionary[word1][1]);
-					alert(word1+' in dic');
-				} // ИНАЧЕ создаем массив отсутствующих переводов слов и отправляем их на сервер noWordTranslate(word);
-				else {
-					addToDictionary.push(word1);
-					alert(word1+' NOT in dic');
-				}
-			});
-			// конец временного кода
 
       // Удаляю текст заголовка ОГЛАВЛЕНИЯ СТРАНИЦЫ.
       $('div.toc h4.work span:first-child').text(" ");
@@ -412,9 +401,9 @@
         else if (a == 'right') $('.main').css('flex-direction', 'row-reverse');
       });
 
-      // 3. ==== МОДУЛЬ АНГЛИЙСКИХ СЛОВ ==============================
-      // 3.1. - создаем JS-МАССИВ всех англ. слов, имеющих class = 'tr' - translation
-      /*
+      // 3. ==== МОДУЛЬ АНГЛИЙСКИХ СЛОВ =======================================================
+      // 3.1. - создаем JS-МАССИВ всех англ. слов, имеющих class = 'tr' - translation для передачи на сервер
+			/*
       var engWords = [];// создаю массив английских слов находящихся на странице
       var word; // Переменная для записи перебираемых в цикле английских слов
       $('.tp').each(function(indx, elem){ // Получаем ВСЕ слова с классом tp
@@ -427,6 +416,37 @@
       }
       });// конец МОДУЛЬ англ. слов часть 1.
       */
+
+			//  3.2. --- Передача массива слов на сервер (AJAX) и ПРИХОД слов уже с транскрипцией и переводом ----
+
+
+			// 3.3 --- ЗАПИСЬ перевода в атрибут data-tr для показа всплывающих подсказок. ------------
+			var addToDictionary = []; //создаем массив для добавления в словарь (слов не нашедших перевод)
+			var word1;
+			$('.tr').each(function(indx, elem){
+				word1 = $.trim( $(elem).text().toLowerCase()); // Удаvяем пробелы, табы, переносы строк + в нижний регистр
+				if(word1 in dictionary) {		// Переменная dictionary УЖЕ д.б. СОЗДАНА в <p id="for-script"><script>
+					$(elem).attr('data-tr',dictionary[word1][0]+' - '+dictionary[word1][1]);
+				} // ИНАЧЕ создаем массив отсутствующих переводов слов и отправляем их на сервер noWordTranslate(word);
+				else {
+					addToDictionary.push(word1);
+				}
+			});
+
+			//	3.4. --- МЕНЯЕМ ПОЛОЖЕНИЕ ::after в зависимости от правого края окна
+			$('.tr').hover(function(){
+				var elemCoord = this.getBoundingClientRect();// получаем координаты прямоугольника элемента
+				if((document.documentElement.clientWidth-elemCoord.right)<201) // Если растояние между правым краем элемента и правого края окна без прокрутки меньше 201px то...
+				$(this).addClass('tr-left'); //... сдвинаем влево ::after на 200px
+			});
+			//	3.5.  включение-отключение показа всплывающих подсказок
+
+			$("#tir").click(function() {
+				if($(this).prop('checked') == false) $('.tr').addClass('no-tr');
+				else if($(this).prop('checked') == true)	$('.tr').removeClass('no-tr');
+			});
+			// ----- конец всплывающих подсказок	-----------------------------------------
+
 
   }); // КОНЕЦ $(document).ready(function() {})
   </script>

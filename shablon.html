@@ -162,6 +162,7 @@
       text-align: justify;
       margin-top: 2px;
       margin-bottom: 2px;
+      position: relative; /* Тогда смогу использовать jquery posdition для ::after */
     }
 
     /* 3. ===== МЕДИА ПРАВИЛА ДЛЯ РАЗНЫХ РАЗМЕРОВ ЭКРАНОВ =================	*/
@@ -199,45 +200,44 @@
       color: blue; /* временно, чтобы эти слова были видны в тексте */
     }
 
-		/* 4.2 --- ВСПЛЫВАЮЩАЯ ПОДСКАЗКА для ТРАНСКРИПЦИИ и ПЕРЕВОДА ------------------ */
-    .tr:hover::after {
+    /*  4.2 --- ВСПЛЫВАЮЩАЯ ПОДСКАЗКА для ТРАНСКРИПЦИИ и ПЕРЕВОДА ------------------ */
+    .tr:hover::after {  /* Псевдоэлемент появляется ТОЛЬКО при наведении курсора (или клике для тач устройств) */
       content: attr(data-tr); /* подставляю в content содержимое атрибута */
-	    font-family: font-tr; /*подключаю свой шрифт, в котором есть знаки транскрипции */
-			/* Позиционирование псевдоэлемента относительно родителя */
+      font-family: font-tr; /*подключаю свой шрифт, в котором есть знаки транскрипции */
+      /* Позиционирование псевдоэлемента относительно родителя */
       position: absolute;
       left: 0; /* слева 0 от родителя */
       bottom: 20px; /* 20px выше слова */
       width: 200px; /* Ширина всплывающего блока */
-			/* Цветовое оформление всплывающей подсказки	*/
-			background-color: #1e2227;/* фоновый цвет */
-			background-image: linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)); /* градиент */
-			text-shadow: 0 1px 0 #000;
-			color: #fff;/* цвет шрифта */
-			border: 2px solid #ccc;/* я оставил старый - не так черно */
-			opacity: .9;/* прозрачность */
-			padding: 5px;/* отступы */
-  		border-radius: 5px;
-  	}
-		.tr-left:hover::after {left: -150px;} /* Если у правого края */
+      /* Цветовое оформление всплывающей подсказки	*/
+      background-color: #1e2227;/* фоновый цвет */
+      background-image: linear-gradient(rgba(255,255,255,.5), rgba(255,255,255,0)); /* градиент */
+      text-shadow: 0 1px 0 #000;
+      color: #fff;/* цвет шрифта */
+      border: 2px solid #ccc;/* я оставил старый - не так черно */
+      opacity: .9;/* прозрачность */
+      padding: 5px;/* отступы */
+      border-radius: 5px;
+    }
+    .tr-left:hover::after {left: -150px;} /* Если у правого края */
 
-		/* Добавляем стрелочку внизу блока всплывающей подсказки */
-		.tr:hover::before{
-    	border: solid;
-			/* border-color: #ccc transparent; Вариант - серая стрелка*/
-			border-color: #373B3F transparent; /* темно-синяя стрелка */
-    	border-width: 6px 6px 0 6px;/* делаем из рамки стрелку вниз */
-    	content: "";/* без контента */
-    	position: absolute;
-			bottom: 15px; /* Позиционирование стрелки снизу */
-    	left: 30%; /* Позиционирование стрелки слева */
-		}
-		/* управляем ОКЛЮЧЕНИЕМ ПОКАЗА перевода */
-		.no-tr {color: #585877;} /* Делаем цвет текста обычным */
-		.no-tr:hover:after {visibility: hidden;}
-		.no-tr:hover:before {visibility: hidden;}
-		.no-tr:hover {cursor: auto;}
-		/* --- КОНЕЦ всплывающей подсказки ТРАНСКРИПЦИИ И ПЕРЕВОДА  ------------------*/
-
+    /* Добавляем стрелочку внизу блока всплывающей подсказки */
+    .tr:hover::before{ /* Псевдоэл. появляется ТОЛЬКО при наведении курсора (или клике для тач устройств) */
+      border: solid;
+      /* border-color: #ccc transparent; просто Вариант - серая стрелка*/
+      border-color: #373B3F transparent; /* темно-синяя стрелка */
+      border-width: 6px 6px 0 6px;/* делаем из рамки стрелку вниз */
+      content: "";/* без контента */
+      position: absolute;
+      bottom: 15px; /* Позиционирование стрелки снизу */
+      left: 30%; /* Позиционирование стрелки слева */
+    }
+    /* управляем ОКЛЮЧЕНИЕМ ПОКАЗА перевода */
+    .no-tr {color: #585877;} /* Делаем цвет текста обычным */
+    .no-tr:hover:after {visibility: hidden;}
+    .no-tr:hover:before {visibility: hidden;}
+    .no-tr:hover {cursor: auto;}
+    /* --- КОНЕЦ всплывающей подсказки ТРАНСКРИПЦИИ И ПЕРЕВОДА  ------------------ */
 
   </style>
 </head>
@@ -418,36 +418,36 @@
       });// конец МОДУЛЬ англ. слов часть 1.
       */
 
-			//  3.2. --- Передача массива слов на сервер (AJAX) и ПРИХОД слов уже с транскрипцией и переводом ----
+      //  3.2. --- Передача массива слов на сервер (AJAX) и ПРИХОД слов уже с транскрипцией и переводом ----
 
 
-			// 3.3 --- ЗАПИСЬ перевода в атрибут data-tr для показа всплывающих подсказок. ------------
-			var addToDictionary = []; //создаем массив для добавления в словарь (слов не нашедших перевод)
-			var word1;
-			$('.tr').each(function(indx, elem){
-				word1 = $.trim( $(elem).text().toLowerCase()); // Удаvяем пробелы, табы, переносы строк + в нижний регистр
-				if(word1 in dictionary) {		// Переменная dictionary УЖЕ д.б. СОЗДАНА в <p id="for-script"><script>
-					$(elem).attr('data-tr',dictionary[word1][0]+' - '+dictionary[word1][1]);
-				} // ИНАЧЕ создаем массив отсутствующих переводов слов и отправляем их на сервер noWordTranslate(word);
-				else {
-					addToDictionary.push(word1);
-				}
-			});
+      // 3.3 --- ЗАПИСЬ перевода в атрибут data-tr для показа всплывающих подсказок. ------------
+      var addToDictionary = []; //создаем массив для добавления в словарь (слов не нашедших перевод)
+      var word1;
+      $('.tr').each(function(indx, elem){
+        word1 = $.trim( $(elem).text().toLowerCase()); // Удаvяем пробелы, табы, переносы строк + в нижний регистр
+        if(word1 in dictionary) {		// Переменная dictionary УЖЕ д.б. СОЗДАНА в <p id="for-script"><script>
+          $(elem).attr('data-tr',dictionary[word1][0]+' - '+dictionary[word1][1]);
+        } // ИНАЧЕ создаем массив отсутствующих переводов слов и отправляем их на сервер noWordTranslate(word);
+        else {
+          addToDictionary.push(word1);
+        }
+      });
 
-			//	3.4. --- МЕНЯЕМ ПОЛОЖЕНИЕ ::after в зависимости от правого края окна
-			$('.tr').hover(function(){
-				var elemCoord = this.getBoundingClientRect();// получаем координаты прямоугольника элемента
-				if((document.documentElement.clientWidth-elemCoord.right)<201) // Если растояние между правым краем элемента и правого края окна без прокрутки меньше 201px то...
-				$(this).addClass('tr-left'); //... сдвинаем влево ::after на 200px
-			});
-			//	3.5.  включение-отключение показа всплывающих подсказок
+      //	3.4. --- МЕНЯЕМ ПОЛОЖЕНИЕ ::after в зависимости от правого края окна
+      $('.tr').hover(function(){
+        el = $(this);
+        // Вычисляем расстояние от левого края элемента до правого края родителя (параграфа с классом toc_p)
+        var distance = el.parent().width() - el.position().left;
+        if(distance < 201) el.addClass('tr-left'); //... сдвинаем влево ::after на 200px
+      });
 
-			$("#tir").click(function() {
-				if($(this).prop('checked') == false) $('.tr').addClass('no-tr');
-				else if($(this).prop('checked') == true)	$('.tr').removeClass('no-tr');
-			});
-			// ----- конец всплывающих подсказок	-----------------------------------------
-
+      //	3.5.  включение-отключение показа всплывающих подсказок
+      $("#tir").click(function() {
+        if($(this).prop('checked') == false) $('.tr').addClass('no-tr');
+        else if($(this).prop('checked') == true)	$('.tr').removeClass('no-tr');
+      });
+      // ----- конец всплывающих подсказок	-----------------------------------------
 
   }); // КОНЕЦ $(document).ready(function() {})
   </script>

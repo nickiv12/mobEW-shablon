@@ -162,7 +162,7 @@
       text-align: justify;
       margin-top: 2px;
       margin-bottom: 2px;
-      position: relative; /* Тогда смогу использовать jquery posdition для ::after */
+      /*position: relative;  Тогда смогу использовать jquery posdition для ::after */
     }
 
     /* 3. ===== МЕДИА ПРАВИЛА ДЛЯ РАЗНЫХ РАЗМЕРОВ ЭКРАНОВ =================	*/
@@ -179,7 +179,10 @@
     @media only screen and (max-width: 20cm) {
       /*  оставляем только 1-у колонку и делаем ее ширину 100% */
       .ad {display: none;}
-      aside {display: none;}
+      aside {
+        width: 0; /* Делаю 0, чтобы надежно высчитывать позицию англ. слова */
+        display: none;
+      }
       article {width: 100%;}
 
       header div label:nth-child(n+2) {display: none;} /* убираю панель управленя САЙДБАРА */
@@ -437,9 +440,12 @@
       //	3.4. --- МЕНЯЕМ ПОЛОЖЕНИЕ ::after в зависимости от правого края окна
       $('.tr').hover(function(){
         el = $(this);
-        // Вычисляем расстояние от левого края элемента до правого края родителя (параграфа с классом toc_p)
-        var distance = el.parent().width() - el.position().left;
+        // Вычисляем расстояние от левого края элемента до правого края окна браузера.
+        // Лучше было бы до края article, но координаты слова либо от окна браузера, либо задавать position родителю, но тогда ломается Оглавление.
+        var elemCoord = this.getBoundingClientRect(); // В объекте пишем координаты краев элемента
+        var distance = $(".main").width() - elemCoord.left;
         if(distance < 201) el.addClass('tr-left'); //... сдвинаем влево ::after на 200px
+        var distance = el.parent().width() - el.position().left;
       });
 
       //	3.5.  включение-отключение показа всплывающих подсказок
